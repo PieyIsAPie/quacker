@@ -4,12 +4,6 @@ import logging
 
 log = logging.getLogger("Quacker-Crypt")
 
-class Request:
-    requesttype = str()
-    data = str()
-    id = int()
-
-
 def encrypt_req(req: str):
     log.info("Encrypting request")
     dictout = dict()
@@ -26,7 +20,7 @@ def encrypt_req(req: str):
     dictout["encode_sha512"] = hashlib.sha512(base64.b64encode(req.encode())).hexdigest()
     data = json.dumps(dictout)
 
-    return data
+    return base64.b85encode(data)
     
 
 def decrypt_req(req: str):
@@ -54,11 +48,7 @@ def decrypt_req(req: str):
     elif hashlib.sha512(dictin["message"].encode()).hexdigest() != dictin["encode_sha512"]:
         return 1
     else:
-        return msg
-
-def parse(req):
-    req = req.split(":")
-    reqtype = req[0]
+        return base64.b85decode(msg)
     
 
 
