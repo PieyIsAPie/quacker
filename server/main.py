@@ -9,8 +9,16 @@ import sys
 import core.msgcrypt
 import random
 
-FORMAT = '%(asctime)s:'
-logging.basicConfig(format=FORMAT)
+version = "1.0"
+log = logging.getLogger("Quacker-Server")
+log.setLevel(logging.INFO)  # Set the logging level to INFO or the desired level
+
+# Create a log handler and set the formatter
+handler = logging.StreamHandler()  # You can also use a FileHandler for writing logs to a file
+formatter = logging.Formatter('%(levelname)s:%(message)s')
+handler.setFormatter(formatter)
+
+log.addHandler(handler)
 
 configpath = "/etc/quacker/cfg/config.json" if platform.system() != "Windows" else os.path.join(os.getenv('APPDATA'), "quacker", "config.json")
 defaultcfg = """
@@ -27,7 +35,6 @@ defaultcfg = """
 """
 global cfg
 
-log = logging.getLogger("Quacker-Server")
 outgoingqueue = queue.Queue(1)
 
 class User():
@@ -77,6 +84,7 @@ def main():
             server_side=True
         )
     log.info("Starting server!")
+    log.info(f"Quacker Server {version} - This code is licensed under the MIT Lisence")
     try:
         server.serve_forever()
     except KeyboardInterrupt:   
