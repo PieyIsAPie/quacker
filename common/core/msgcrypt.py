@@ -20,12 +20,12 @@ def encrypt_req(req: str):
     dictout["encode_sha512"] = hashlib.sha512(base64.b64encode(req.encode())).hexdigest()
     data = json.dumps(dictout)
 
-    return base64.b85encode(data)
+    return data
     
 
 def decrypt_req(req: str):
     dictin = json.loads(req)
-    msg = base64.b64decode(dictin["message"].encode()).decode()
+    msg = base64.b64decode(dictin["message"]).decode()
     if hashlib.md5(msg.encode()).hexdigest() != dictin["decode_md5"]:
         return 1
     elif hashlib.sha1(msg.encode()).hexdigest() != dictin["decode_sha1"]:
@@ -48,7 +48,7 @@ def decrypt_req(req: str):
     elif hashlib.sha512(dictin["message"].encode()).hexdigest() != dictin["encode_sha512"]:
         return 1
     else:
-        return base64.b85decode(msg)
+        return msg
     
 
 
